@@ -1,0 +1,7 @@
+{
+  "name": "TlApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
