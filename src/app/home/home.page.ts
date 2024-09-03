@@ -7,7 +7,7 @@ import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  usuario:String;
+  usuario:String="";
   niveles:any[]=[
     {id:1,nivel:"Basica incompleta"},
     {id:2,nivel:"Basica completa"},
@@ -24,8 +24,9 @@ export class HomePage {
   };
   constructor(public alertController: AlertController, private activeRoute: ActivatedRoute, private router: Router) {
     this.activeRoute.queryParams.subscribe(params =>{
-      if(this.router.getCurrentNavigation()?.extras.state){
-        this.usuario=this.router.getCurrentNavigation()?.extras.state.user;
+      const navigation = this.router.getCurrentNavigation();
+      if(navigation && navigation.extras && navigation.extras.state){
+        this.usuario= navigation.extras.state['user'];
       }
     });
   };
