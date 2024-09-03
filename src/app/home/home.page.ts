@@ -28,6 +28,21 @@ export class HomePage {
         this.usuario=this.router.getCurrentNavigation().extras.state.user;
       }
     });
+  };
+  limpiar(){
+    for(var [key,value] of Object.entries(this.data)){
+      Object.defineProperty(this.data,key,{value:""})
+    }
   }
-
+  mostrar(){
+    (this.data.nombre!="" && this.data.apellido!="") && this.presentAlert("Usuario","Su nombre es "+this.data.nombre+" "+this.data.apellido);
+  }
+  async presentAlert(titulo:string,message:string){
+    const alert = await this.alertController.create({
+      header: titulo,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
 }
