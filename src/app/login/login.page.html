@@ -9,12 +9,12 @@
   -->
   <ion-title class="ion-padding-top ion-text-center ion-margin-top">
     <ion-label>
-      <h1>SkeletonAPP</h1>
-      <p>Aqui comienza todo</p>
+      <img src="assets/icon/logoapp.png" style="padding:25px;" />
+
     </ion-label>
   </ion-title>
   <!--
-    Se genera una divición donde estara el contenido del login
+    Se genera una división donde estara el contenido del login
     para esto se utilizara ion-padding-vertical que aplica un
     relleno arriba y abajo de 16px por defecto
     See: https://ionicframework.com/docs/layout/css-utilities#element-padding
@@ -24,7 +24,7 @@
       Se establece un card que contendra un titulo
       y un contenido
     -->
-    <ion-card class="ion-text-center">
+    <ion-card  color="transparent" class="ion-text-center" >
       <ion-card-title>
         <ion-label class="ion-padding ion-border">
           <h1>Bienvenido!</h1>
@@ -32,16 +32,10 @@
       </ion-card-title>
       <ion-card-content>
         <ion-item>
-          <ion-label position="floating">Usuario</ion-label>
-          <ion-input class="ion-margin-top" type="text" [(ngModel)]="login.Usuario"></ion-input>
+          <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Enter a valid email" errorText="Invalid email" ngModel email></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating" >Password</ion-label>
-          <!--
-            El type Password inmediatamente pasa lo que uno
-            escribe a *****
-          -->
-          <ion-input class="ion-margin-top" type="password" [(ngModel)]="login.Password"></ion-input>
+          <ion-input class="ion-margin-top" type="password" label="Contraseña" labelPlacement="floating" [(ngModel)]="login.Password"></ion-input>
         </ion-item>
       </ion-card-content>
       <ion-button class="ion-margin" shape="block" (click)="ingresar()">Ingresar</ion-button>
