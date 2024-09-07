@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
-
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +21,7 @@ export class HomePage {
     genero:"",
     nacimiento:""
   };
-  constructor(public alertController: AlertController, private activeRoute: ActivatedRoute, private router: Router) {
+  constructor(public alertController: AlertController,public toastController: ToastController, private activeRoute: ActivatedRoute, private router: Router) {
     this.activeRoute.queryParams.subscribe(params =>{
       const navigation = this.router.getCurrentNavigation();
       if(navigation && navigation.extras && navigation.extras.state){
@@ -30,14 +30,16 @@ export class HomePage {
     });
   };
   limpiar(){
-    
     for(var [key,value] of Object.entries(this.data)){
       Object.defineProperty(this.data,key,{value:""})
     }
   }
   mostrar(){
     (this.data.nombre!="" && this.data.apellido!="") && this.presentAlert("Usuario","Su nombre es "+this.data.nombre+" "+this.data.apellido);
+    // no hay nada que mostrar falta poner condicional para mostrar mensaje present toast con nada que mostrar
   }
+
+
   async presentAlert(titulo:string,message:string){
     const alert = await this.alertController.create({
       header: titulo,
@@ -46,5 +48,11 @@ export class HomePage {
     });
     await alert.present();
   }
-  
+  async presentToast(message:string, duration?:number){
+    const toast = await this.toastController.create({
+      message:message,
+      duration:duration?duration:2000
+    });
+    toast.present();
+  }
 }

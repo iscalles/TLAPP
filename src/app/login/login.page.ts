@@ -21,7 +21,6 @@ export class LoginPage implements OnInit {
     if(this.validateModel(this.login)){
       if(this.validateLongEmail(this.login.Email)){
         if(this.validateLongPass(this.login.Password)){
-          this.mostrarCarga;
           this.presentToast("Bienvenido "+this.login.Email);
           let navigationExtras:NavigationExtras={
             state:{user:this.login.Email}
@@ -33,7 +32,7 @@ export class LoginPage implements OnInit {
           this.login.Password="";
         }
       }else{
-        this.presentToast("El largo del Email debe de ser entre 3 y 8 caracteres");
+        this.presentToast("El largo del Email debe de ser entre 3 y 100 caracteres");
         this.login.Email="";
       }
     }else{
