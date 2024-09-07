@@ -32,14 +32,17 @@ export class HomePage {
   limpiar(){
     for(var [key,value] of Object.entries(this.data)){
       Object.defineProperty(this.data,key,{value:""})
+      this.presentToast("Campos limpiados exitosamente");
+
     }
   }
   mostrar(){
-    (this.data.nombre!="" && this.data.apellido!="") && this.presentAlert("Usuario","Su nombre es "+this.data.nombre+" "+this.data.apellido);
-    // no hay nada que mostrar falta poner condicional para mostrar mensaje present toast con nada que mostrar
+    if ((this.data.nombre!="" && this.data.apellido!="")){
+      this.presentAlert("Usuario","Su nombre es "+this.data.nombre+" "+this.data.apellido);
+    }else{
+      this.presentToast("No hay nada que mostrar");
+    }
   }
-
-
   async presentAlert(titulo:string,message:string){
     const alert = await this.alertController.create({
       header: titulo,
