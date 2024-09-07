@@ -7,12 +7,10 @@
     See: https://ionicframework.com/docs/layout/css-utilities#text-alignment
     See: https://ionicframework.com/docs/layout/css-utilities#element-padding
   -->
-  <ion-title class="ion-padding-top ion-text-center ion-margin-top">
-    <ion-label>
-      <img src="assets/icon/logoapp.png" style="padding:25px;" />
-
-    </ion-label>
-  </ion-title>
+  <div class="ion-text-center ion-margin-top">
+    <img class="img" src="assets/icon/logoapp.png"/>
+  </div>
+ 
   <!--
     Se genera una división donde estara el contenido del login
     para esto se utilizara ion-padding-vertical que aplica un
@@ -32,7 +30,7 @@
       </ion-card-title>
       <ion-card-content>
         <ion-item>
-          <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Enter a valid email" errorText="Invalid email" ngModel email></ion-input>
+          <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Enter a valid email" errorText="Invalid email" ngModel email [(ngModel)]="login.Email"></ion-input>
         </ion-item>
         <ion-item>
           <ion-input class="ion-margin-top" type="password" label="Contraseña" labelPlacement="floating" [(ngModel)]="login.Password"></ion-input>

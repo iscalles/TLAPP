@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -8,28 +10,31 @@ import { NavigationExtras, Router } from '@angular/router';
 })
 export class LoginPage implements OnInit {
   login:any={
-    Usuario:"",
+    Email:"",
     Password:""
   }
   field:string="";
-  constructor(public toastController: ToastController, private router:Router) {}
+  constructor(public toastController: ToastController, private router:Router, private loadingCtrl: LoadingController) {}
   ngOnInit() {}
   ingresar(){
+    this.mostrarCarga();
     if(this.validateModel(this.login)){
-      if(this.validateLongUsuario(this.login.Usuario)){
+      if(this.validateLongEmail(this.login.Email)){
         if(this.validateLongPass(this.login.Password)){
-          this.presentToast("Bienvenido "+this.login.Usuario);
+          this.mostrarCarga;
+          this.presentToast("Bienvenido "+this.login.Email);
           let navigationExtras:NavigationExtras={
-            state:{user:this.login.Usuario}
+            state:{user:this.login.Email}
           }
           this.router.navigate(['home'],navigationExtras);
+          
         }else{
           this.presentToast("La contraseña debe ser de largo 4 y solo numerica");
           this.login.Password="";
         }
       }else{
-        this.presentToast("El largo del Usuario debe de ser entre 3 y 8 caracteres");
-        this.login.Usuario="";
+        this.presentToast("El largo del Email debe de ser entre 3 y 8 caracteres");
+        this.login.Email="";
       }
     }else{
       this.presentToast("Falta: "+this.field);
@@ -44,8 +49,8 @@ export class LoginPage implements OnInit {
     }
     return true;
   }
-  validateLongUsuario(dato:String){
-    if(dato.length>=3 && dato.length<=8){
+  validateLongEmail(dato:String){
+    if(dato.length>=3 && dato.length<=100 && dato.includes('@')){
       return true;
     }
     return false;
@@ -63,5 +68,11 @@ export class LoginPage implements OnInit {
     });
     toast.present();
   }
-
+  async mostrarCarga(){
+    const carga = await this.loadingCtrl.create({
+      message: 'Calmao...',
+      duration: 1000,
+    });
+    carga.present();
+  }
 }

@@ -25,3 +25,18 @@
 #container a {
   text-decoration: none;
 }
+.img{
+  padding:25px;
+  width:200px;
+  align-self:center;
+}
+.title-container{
+  display:flex; 
+  justify-content: center;
+}
+.title-container h1{
+  text-align: center;
+}
+.genero-select{
+  font-size: small;
+}
