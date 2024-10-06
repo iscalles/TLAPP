@@ -1,13 +1,19 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>backup</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">backup</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="ion-text-center ion-margin-top">
+    <img class="img" src="assets/icon/logoapp.png"/>
+  </div>
+  <div class="ion-padding-vertical">
+    <ion-card  color="transparent" class="ion-text-center" >
+      <ion-card-title>
+        <ion-label class="ion-padding ion-border">
+          <h1>Recuperar contraseña</h1>
+        </ion-label>
+      </ion-card-title>
+      <ion-card-content>
+        <ion-item>
+          <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Enter a valid email" errorText="Invalid email" ngModel email ></ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
