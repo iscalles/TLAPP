@@ -36,7 +36,22 @@
           <ion-input class="ion-margin-top" type="password" label="Contraseña" labelPlacement="floating" [(ngModel)]="login.Password"></ion-input>
         </ion-item>
       </ion-card-content>
-      <ion-button color="secondary" class="ion-margin" shape="block" (click)="ingresar()">Ingresar</ion-button>
+      <ion-row>
+        <ion-col col-6>
+          <ion-button color="secondary" shape="block" (click)="ingresar()" class="ion-margin">
+            Ingresar
+          </ion-button>
+        </ion-col>
+        <ion-col col-6>
+          <ion-button color="secondary" shape="block" (click)="registrar()" class="ion-margin">
+            Registro
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-label>
+          <h3>¿Olvidaste tu contraseña?</h3>
+      </ion-label>
+
     </ion-card>
   </div>
   

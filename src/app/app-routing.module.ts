@@ -20,9 +20,15 @@ const routes: Routes = [
     loadChildren: () => import('./backup/backup.module').then( m => m.BackupPageModule)
   },
   {
-    path: '**',
+    path: 'registro',
+    loadChildren: () => import('./registro/registro.module').then( m => m.RegistroPageModule)
+  },
+  {
+    path: '**',//<--- NOTFOUND TIENE QUE IR AL FINAL DEL ARREGLO
     loadChildren: () => import('./not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
+  
+
 
 ];
 

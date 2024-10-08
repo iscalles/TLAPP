@@ -39,6 +39,9 @@ export class LoginPage implements OnInit {
       this.presentToast("Falta: "+this.field);
     }
   }
+  registrar(){
+    this.router.navigate(['registro']);
+  }
   validateModel(model:any){
     for(var [key,value] of Object.entries(model)){
       if(value==""){
