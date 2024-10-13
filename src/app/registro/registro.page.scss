@@ -2,7 +2,6 @@
 
 #container {
     text-align: center;
-  
     position: absolute;
     left: 0;
     right: 0;
@@ -43,4 +42,13 @@
   }
   .genero-select{
     font-size: small;
+  }
+  .header{
+    display: flex;
+    position: relative;
+    -ms-flex-order: -1;
+    order: -1;
+    width: 100%;
+    z-index: 10;
+    justify-content: center;
   }
