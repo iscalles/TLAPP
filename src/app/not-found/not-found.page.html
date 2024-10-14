@@ -1,15 +1,12 @@
-<ion-content>
-  <div class="ion-text-center ion-margin-top">
-    <ion-label class="ion-text-center ion-margin-top" >Error #404</ion-label>
-    <img class="img" src="assets/icon/logoapp.png"/>
+<ion-content [fullscreen]="true" class="ion-padding-horizontal ion-padding-vertical">
+  <img class="img" src="assets/icon/error_cat.png"/>
+  <div class="title-container">
+      <label>
+        <h1 class="ion-text-center">Oops!</h1>
+        <h4 class="ion-text-center"> La página que estás buscando no existe.</h4>
+      </label>
   </div>
-  <div>
-    <ion-card class="ion-text-center">
-      <ion-card-title>
-        <ion-label>
-          <h1>La pagina que buscas no existe...</h1>
-        </ion-label>
-      </ion-card-title>
-    </ion-card>
-  </div>
+  <ion-button color="secondary" shape="block" (click)="volverHome()">
+    Volver al inicio
+  </ion-button>
 </ion-content>
