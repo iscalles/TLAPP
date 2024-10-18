@@ -20,17 +20,11 @@ export class LoginPage implements OnInit {
     this.mostrarCarga();
     if(this.validateModel(this.login)){
       if(this.validateLongEmail(this.login.Email)){
-        if(this.validateLongPass(this.login.Password)){
-          this.presentToast("Bienvenido "+this.login.Email);
+        this.presentToast("Bienvenido "+this.login.Email);
           let navigationExtras:NavigationExtras={
             state:{user:this.login.Email}
           }
           this.router.navigate(['home'],navigationExtras);
-          
-        }else{
-          this.presentToast("La contraseña debe ser de largo 4 y solo numerica");
-          this.login.Password="";
-        }
       }else{
         this.presentToast("El largo del Email debe de ser entre 3 y 100 caracteres");
         this.login.Email="";
