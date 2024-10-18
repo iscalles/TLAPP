@@ -9,7 +9,7 @@ export class GuardService {
   private authTokenKey = "authToken";
   private userRoleKey = "userRole"; 
   private userIdKey = "userId"; // Nueva clave para almacenar userId
-  private loggedIn: boolean = false; 
+  private loggedIn: boolean = false;
   private apiUrl = 'http://localhost:3000/users'; 
 
   constructor(private http: HttpClient) {}
@@ -49,7 +49,7 @@ export class GuardService {
         const user = users.find(u => u.email === email && u.password === password);
         if (user) {
           this.storeToken(user.token);
-          this.storeUserRole(user.ocupacion);
+          this.storeUserRole(user.rol);
           this.storeUserId(user.id); // Almacena el userId al iniciar sesión
           this.loggedIn = true; // Cambia el estado de autenticación
           return user; // Devuelve el usuario autenticado

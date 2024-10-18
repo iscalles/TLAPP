@@ -6,7 +6,14 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule),
-    canActivate:[AuthguardService]
+    canActivate:[AuthguardService],
+    data:{ role: 'Pasajero'}
+  },
+  {
+    path: 'home-conductor',
+    loadChildren: () => import('./home-conductor/home-conductor.module').then( m => m.HomeConductorPageModule),
+    canActivate:[AuthguardService],
+    data:{ role: 'Conductor'}
   },
   {
     path: '',
