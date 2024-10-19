@@ -7,6 +7,10 @@ import { ViajeService } from '../viaje.service';
   styleUrls: ['./viaje-list.page.scss'],
 })
 export class ViajeListPage implements OnInit {
+  estados:any[]=[
+    {id:1,estado:"pendiente"},
+    {id:2,estado:"completado"},
+  ]
   viajes: any[] = [];
   newViaje: { 
     conductorId: string; 

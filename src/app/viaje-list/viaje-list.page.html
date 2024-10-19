@@ -1,28 +1,39 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Lista de Viajes</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  <div class="ion-text-center ion-margin-top">
+    <img class="img" src="assets/icon/logoapp.png"/>
+  </div>
   <ion-list>
     <ion-item *ngFor="let viaje of viajes">
       <ion-label>
         {{ viaje.direccionInicio }} -> {{ viaje.direccionFinal }} ({{ viaje.estado }})
       </ion-label>
-      <ion-button (click)="updateViaje(viaje.id, viaje)" fill="clear">Editar</ion-button>
+      <!-- <ion-button (click)="updateViaje(viaje.id, viaje)" fill="clear" color="secondary">Editar</ion-button> -->
       <ion-button (click)="deleteViaje(viaje.id)" fill="clear" color="danger">Eliminar</ion-button>
     </ion-item>
   </ion-list>
 
   <!-- Formulario para crear un nuevo viaje -->
-  <ion-list>
+  <ion-list class="ion-text-center">
     <ion-input placeholder="Dirección Inicio" [(ngModel)]="newViaje.direccionInicio"></ion-input>
     
     <ion-input placeholder="Dirección Final" [(ngModel)]="newViaje.direccionFinal"></ion-input>
+
+    <ion-item lines="none">
+      <div class="precio">
+        <ion-label style="margin-right: 10px;">Precio:</ion-label>
+        <ion-input type="number" [(ngModel)]="newViaje.precio" placeholder="Introduce el precio"></ion-input>
+      </div>
+    </ion-item>
     
-    <ion-input placeholder="Estado" [(ngModel)]="newViaje.estado"></ion-input>
+
+<!--     
+    <ion-input placeholder="Estado" [(ngModel)]="newViaje.estado"></ion-input> -->
+
+    <ion-select class="estado-select" [(ngModel)]="newViaje.estado">
+      <div class="estado-select" slot="label" style="color:gray">Seleccione Estado</div>
+      <ion-select-option *ngFor="let e of estados" [value]="e.estado">{{e.estado}}</ion-select-option>
+    </ion-select>
     
-    <ion-button (click)="createViaje()">Agregar Viaje</ion-button>
+    <ion-button color="secondary" class="ion-margin" (click)="createViaje()">Agregar Viaje</ion-button>
   </ion-list>
 </ion-content>
