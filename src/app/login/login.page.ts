@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+import { GuardService } from '../guard.service';
 
 @Component({
   selector: 'app-login',
@@ -14,23 +15,44 @@ export class LoginPage implements OnInit {
     Password:""
   }
   field:string="";
-  constructor(public toastController: ToastController, private router:Router, private loadingCtrl: LoadingController) {}
+  constructor(public toastController: ToastController, private router:Router, private loadingCtrl: LoadingController, private guardService:GuardService) {}
   ngOnInit() {}
-  ingresar(){
-    this.mostrarCarga();
-    if(this.validateModel(this.login)){
-      if(this.validateLongEmail(this.login.Email)){
-        this.presentToast("Bienvenido "+this.login.Email);
-          let navigationExtras:NavigationExtras={
-            state:{user:this.login.Email}
+  // ingresar(){
+  //   this.mostrarCarga();
+  //   if(this.validateModel(this.login)){
+  //     if(this.validateLongEmail(this.login.Email)){
+  //       this.presentToast("Bienvenido "+this.login.Email);
+  //       let navigationExtras:NavigationExtras={
+  //         state:{user:this.login.Email}
+  //       }
+  //       this.router.navigate(['home'],navigationExtras);
+  //     }else{
+  //       this.presentToast("El largo del Email debe de ser entre 3 y 100 caracteres");
+  //       this.login.Email="";
+  //     }
+  //   }else{
+  //     this.presentToast("Falta: "+this.field);
+  //   }
+  // }
+  async ingresar() {
+    if (!this.login.Email && !this.login.Password) {
+      this.presentToast('Por favor, ingresa el email y la contraseña');
+    } else if (!this.login.Email) {
+      this.presentToast('Por favor, ingresa el email');
+    } else if (!this.login.Password) {
+      this.presentToast('Por favor, ingresa la contraseña');
+    } else {
+      this.guardService.login(this.login.Email, this.login.Password).subscribe(user => {
+        if (user) {
+          if (user.rol == 'Pasajero') {
+            this.router.navigate(['/home']); 
+          } else if (user.rol == 'Conductor') {
+            this.router.navigate(['/home-conductor']); 
           }
-          this.router.navigate(['home'],navigationExtras);
-      }else{
-        this.presentToast("El largo del Email debe de ser entre 3 y 100 caracteres");
-        this.login.Email="";
-      }
-    }else{
-      this.presentToast("Falta: "+this.field);
+        } else {
+          this.presentToast('Credenciales incorrectas'); 
+        }
+      });
     }
   }
   registrar(){

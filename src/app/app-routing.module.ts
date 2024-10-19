@@ -6,9 +6,9 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-    // ,
-    // canActivate:[AuthguardService],
-    // data:{ role: 'Pasajero'}
+    ,
+    canActivate:[AuthguardService],
+    data:{ role: 'Pasajero'}
   },
   {
     path: 'home-conductor',

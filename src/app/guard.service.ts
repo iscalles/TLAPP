@@ -52,6 +52,7 @@ export class GuardService {
           this.storeUserRole(user.rol);
           this.storeUserId(user.id); // Almacena el userId al iniciar sesión
           this.loggedIn = true; // Cambia el estado de autenticación
+          console.log(user);
           return user; // Devuelve el usuario autenticado
         } else {
           return null; // Usuario no encontrado
