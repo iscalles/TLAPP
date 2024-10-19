@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Lista de Viajes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let viaje of viajes">
+      <ion-label>
+        {{ viaje.direccionInicio }} -> {{ viaje.direccionFinal }} ({{ viaje.estado }})
+      </ion-label>
+      <ion-button (click)="updateViaje(viaje.id, viaje)" fill="clear">Editar</ion-button>
+      <ion-button (click)="deleteViaje(viaje.id)" fill="clear" color="danger">Eliminar</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Formulario para crear un nuevo viaje -->
+  <ion-item>
+    <ion-input placeholder="Dirección Inicio" [(ngModel)]="newViaje.direccionInicio"></ion-input>
+    <ion-input placeholder="Dirección Final" [(ngModel)]="newViaje.direccionFinal"></ion-input>
+    <ion-input placeholder="Estado" [(ngModel)]="newViaje.estado"></ion-input>
+    <ion-button (click)="createViaje()">Agregar Viaje</ion-button>
+  </ion-item>
+</ion-content>
