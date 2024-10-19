@@ -16,10 +16,13 @@
   </ion-list>
 
   <!-- Formulario para crear un nuevo viaje -->
-  <ion-item>
+  <ion-list>
     <ion-input placeholder="Dirección Inicio" [(ngModel)]="newViaje.direccionInicio"></ion-input>
+    
     <ion-input placeholder="Dirección Final" [(ngModel)]="newViaje.direccionFinal"></ion-input>
+    
     <ion-input placeholder="Estado" [(ngModel)]="newViaje.estado"></ion-input>
+    
     <ion-button (click)="createViaje()">Agregar Viaje</ion-button>
-  </ion-item>
+  </ion-list>
 </ion-content>
