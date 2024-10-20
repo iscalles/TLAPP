@@ -11,7 +11,27 @@
   </div>
   <br>
   <div>
-    <ion-searchbar animated="true" placeholder="¿A dónde quieres ir?" position="stacked"></ion-searchbar>
+    <!-- Barra de búsqueda -->
+    <ion-searchbar #searchInput animated="true" placeholder="¿A dónde quieres ir?" position="stacked"></ion-searchbar>
   </div>
-  <div #map id="map"></div>
+
+  <!-- Contenedor del mapa -->
+  <div #map id="map" style="height: 80%;"></div>
+  
+  <!-- Menú horizontal -->
+  <ion-footer>
+    <ion-toolbar>
+      <ion-segment>
+        <ion-segment-button value="viajes">
+          Viajes
+        </ion-segment-button>
+        <ion-segment-button value="perfil">
+          Perfil
+        </ion-segment-button>
+        <ion-segment-button value="configuración">
+          Configuración
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+  </ion-footer>
 </ion-content>

@@ -1,103 +1,111 @@
-import { Component } from '@angular/core';
-import { ViewChild, ElementRef } from '@angular/core';
-import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
+import { IonSearchbar } from '@ionic/angular';
 
-declare var google: any;
-
-interface Marker{
-  title: string;
-  latitude: string;
-  longitude: string;
+// Extendemos la interfaz Window para incluir la propiedad google
+interface Window {
+  google: any;
 }
+declare var google: any;
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
-  map:any;
+export class HomePage implements AfterViewInit {
+  @ViewChild('map', { static: false }) mapElement!: ElementRef;
+  @ViewChild('searchInput', { static: false }) searchInput!: IonSearchbar; // Cambia ElementRef por IonSearchbar
+  map!: any;
 
-  @ViewChild('map', {read: ElementRef, static: false}) mapRef!:ElementRef;
+  constructor() {}
 
-  infoWindows: any = [];
-  markers: Marker[] = [
-    {
-      title: "Casa Isabel",
-      latitude: "-33.1495845",
-      longitude: "-71.5699625"
-    },
-    {
-      title: "Casa Isabel",
-      latitude: "-33.1495845",
-      longitude: "-71.5699625"
-    }
-  ];
-
-  constructor() {};
-  ngAfterViewInit(){
-    this.geolocationNative();
-  }
-  async geolocationNative(){
-    try{
-      const position = await Geolocation.getCurrentPosition();
-      console.log('Latitude: ',position.coords.latitude);
-      console.log('Longitude: ', position.coords.longitude);
-    } catch (error){
-      console.error('Error getting location', error);
-    }
+  async ngAfterViewInit() {
+    console.log("ngAfterViewInit ejecutado");
+    console.log("Referencia a searchInput:", this.searchInput);
+    
+    await this.loadGoogleMaps();
+    await this.loadMap();
+  
+    // Usa un pequeño retraso para asegurar que el DOM esté completamente cargado
+    setTimeout(() => {
+      this.setupSearchBox();
+    }, 300); 
+    console.log("Componente inicializado completamente:", this.searchInput, this.mapElement);// Prueba con un retraso de 300 ms
   }
 
-  ionViewDidEnter(){
-    this.showMap();
-  }
-
-  async addMarkersToMap(markers: Marker[]){
-    const{ AdvancedMarkerElement } = await google.maps.importLibrary('marker');
-    for (let marker of markers){
-      const position = new google.maps.LatLng(marker.latitude, marker.longitude);
-      const mapMarker = new AdvancedMarkerElement({
-        position: position,
-        title: marker.title,
-        map: this.map
+  private async loadGoogleMaps(): Promise<void> {
+    if (!window.google) {
+      return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCQVlePODfWpk6ZfBCx51vXA3UAIyK69Fw&libraries=places';
+        script.onload = () => {
+          console.log("Google Maps API cargado");
+          resolve(); 
+        }; 
+        document.body.appendChild(script);
       });
-      this.addInfoWindowToMarker(mapMarker, marker.title, position);
+    } else {
+      return Promise.resolve();
     }
   }
-  async addInfoWindowToMarker(marker: any, title: string, position: any){
-    const { InfoWindow } = await google.maps.importLibrary("core");
-    console.log(typeof InfoWindow);
-    let infoWindowContent = '<div id="content">'+
-                              '<h2>' + title + '</h2>'+
-                              '<p>Latitude: ' + position.lat() + '</p>' + 
-                              '<p>Longitude: ' + position.lng() + '</p>' +
-                            '</div>';
-    let infoWindow = InfoWindow({
-      content: infoWindowContent
-    });                         
-    marker.addListener('click', () =>{
-      this.closeAllInfoWindows();
-      infoWindow.open(this.map, marker);
-    });
-    this.infoWindows.push(infoWindow);
-  }
-  closeAllInfoWindows() {
-    for(let window of this.infoWindows){
-      window.close();
-    }
-  }
-  async showMap(){
-    const { Map } = await google.maps.importLibrary("maps");
 
-    const location = new google.maps.LatLng(-33.1495845, -71.5699625);
-    const options = {
-      center: location,
+  async loadMap() {
+    const coordinates = await Geolocation.getCurrentPosition();
+    const latLng = new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude);
+  
+    const mapOptions = {
+      center: latLng,
       zoom: 15,
-      disableDefaultUI: true,
-      mapId: 'a2cb7aa4a486d560'
+    };
+  
+    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+  
+    new google.maps.Marker({
+      position: latLng,
+      map: this.map,
+      title: "Estás aquí",
+    });
+  
+    console.log("Mapa cargado"); // Agrega un log aquí
+  }
+
+  setupSearchBox() {
+    // Verificar que searchInput esté definido
+    console.log("Elemento de búsqueda:", this.searchInput);
+    if (!this.searchInput) {
+        console.error("searchInput no está definido");
+        return;
     }
-    this.map = new Map(this.mapRef.nativeElement, options);
-    this.addMarkersToMap(this.markers);
+
+    // Usar el método getInputElement() del componente IonSearchbar
+    this.searchInput.getInputElement().then((input: HTMLInputElement) => {
+        const searchBox = new google.maps.places.SearchBox(input);
+
+        this.map.addListener('bounds_changed', () => {
+            searchBox.setBounds(this.map.getBounds()!);
+        });
+
+        searchBox.addListener('places_changed', () => {
+            const places = searchBox.getPlaces();
+            if (places.length === 0) return;
+
+            const bounds = new google.maps.LatLngBounds();
+            places.forEach((place: any) => {
+                if (!place.geometry) {
+                    console.log("No details available for input: '" + place.name + "'");
+                    return;
+                }
+                if (place.geometry.viewport) {
+                    bounds.union(place.geometry.viewport);
+                } else {
+                    bounds.extend(place.geometry.location);
+                }
+            });
+            this.map.fitBounds(bounds);
+        });
+    }).catch((error: any) => {
+        console.error("Error al obtener el elemento de entrada:", error);
+    });
   }
 }
