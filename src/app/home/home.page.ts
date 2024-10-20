@@ -4,6 +4,7 @@ import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
 
 declare var google: any;
+
 interface Marker{
   title: string;
   latitude: string;
@@ -35,7 +36,6 @@ export class HomePage {
   ];
 
   constructor() {};
-
   ngAfterViewInit(){
     this.geolocationNative();
   }
@@ -53,26 +53,27 @@ export class HomePage {
     this.showMap();
   }
 
-  addMarkersToMap(markers: Marker[]){
+  async addMarkersToMap(markers: Marker[]){
+    const{ AdvancedMarkerElement } = await google.maps.importLibrary('marker');
     for (let marker of markers){
-      let position = new google.maps.LatLng(marker.latitude, marker.longitude);
-      let mapMarker = new google.maps.Marker({
+      const position = new google.maps.LatLng(marker.latitude, marker.longitude);
+      const mapMarker = new AdvancedMarkerElement({
         position: position,
         title: marker.title,
-        latitude: marker.latitude,
-        longitude: marker.longitude
+        map: this.map
       });
-      mapMarker.setMap(this.map);
-      this.addInfoWindowToMarker(mapMarker);
+      this.addInfoWindowToMarker(mapMarker, marker.title, position);
     }
   }
-  addInfoWindowToMarker(marker: any){
+  async addInfoWindowToMarker(marker: any, title: string, position: any){
+    const { InfoWindow } = await google.maps.importLibrary("core");
+    console.log(typeof InfoWindow);
     let infoWindowContent = '<div id="content">'+
-                              '<h2 id="firstHeading" class="firstHeading">' + marker.getTitle() + '</h2>'+
-                              '<p>Latitude: ' + marker.getPosition()?.lat() + '</p>' + 
-                              '<p>Longitude: ' + marker.getPosition()?.lng() + '</p>' +
+                              '<h2>' + title + '</h2>'+
+                              '<p>Latitude: ' + position.lat() + '</p>' + 
+                              '<p>Longitude: ' + position.lng() + '</p>' +
                             '</div>';
-    let infoWindow = new google.maps.infoWindow({
+    let infoWindow = InfoWindow({
       content: infoWindowContent
     });                         
     marker.addListener('click', () =>{
@@ -88,15 +89,15 @@ export class HomePage {
   }
   async showMap(){
     const { Map } = await google.maps.importLibrary("maps");
-    const { Marker } = await google.maps.importLibrary("marker");
 
     const location = new google.maps.LatLng(-33.1495845, -71.5699625);
     const options = {
       center: location,
       zoom: 15,
-      disableDefaultUI: true
+      disableDefaultUI: true,
+      mapId: 'a2cb7aa4a486d560'
     }
-    this.map = new google.maps.Map(this.mapRef.nativeElement, options);
+    this.map = new Map(this.mapRef.nativeElement, options);
     this.addMarkersToMap(this.markers);
   }
 }
