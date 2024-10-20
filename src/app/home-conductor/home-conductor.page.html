@@ -1,13 +1,25 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>home-conductor</ion-title>
+    <ion-title>Home Conductor</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home-conductor</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="inicio">
+      Inicio
+    </ion-segment-button>
+    <ion-segment-button value="viajes">
+      Viajes
+    </ion-segment-button>
+    <ion-segment-button value="perfil">
+      Perfil
+    </ion-segment-button>
+  </ion-segment>
+
+  <ng-container [ngSwitch]="selectedSegment">
+    <app-inicio-conductor *ngSwitchCase="'inicio'"></app-inicio-conductor>
+    <app-viajes-conductor *ngSwitchCase="'viajes'"></app-viajes-conductor>
+    <app-perfil-conductor *ngSwitchCase="'perfil'"></app-perfil-conductor>
+  </ng-container>
 </ion-content>

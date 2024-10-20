@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-home-conductor',
   templateUrl: './home-conductor.page.html',
   styleUrls: ['./home-conductor.page.scss'],
 })
-export class HomeConductorPage implements OnInit {
+export class HomeConductorPage {
+  selectedSegment = 'inicio';
 
-  constructor() { }
-
-  ngOnInit() {
+  segmentChanged(event: any) {
+    this.selectedSegment = event.detail.value;
   }
-
+  constructor() {}
 }

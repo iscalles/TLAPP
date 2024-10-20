@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Perfil del Conductor</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Cerrar Sesión</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input [(ngModel)]="user.name" [readonly]="!editMode"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Email</ion-label>
+      <ion-input [(ngModel)]="user.email" [readonly]="!editMode"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">RUT</ion-label>
+      <ion-input [(ngModel)]="user.rut" [readonly]="!editMode"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Rol</ion-label>
+      <ion-input [(ngModel)]="user.rol" [readonly]="true"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="full" *ngIf="!editMode" (click)="enableEditMode()">Editar</ion-button>
+  <ion-button expand="full" *ngIf="editMode" (click)="saveProfileChanges()">Actualizar</ion-button>
+</ion-content>
