@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthguardService } from './authguard.service';
+import { HomeConductorPage } from './home-conductor/home-conductor.page';
 
 const routes: Routes = [
   {
@@ -13,7 +14,8 @@ const routes: Routes = [
     path: 'home-conductor',
     loadChildren: () => import('./home-conductor/home-conductor.module').then( m => m.HomeConductorPageModule),
     canActivate:[AuthguardService],
-    data:{ role: 'Conductor'}
+    data:{ role: 'Conductor'},
+    component: HomeConductorPage
   },
   {
     path: '',
