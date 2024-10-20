@@ -39,9 +39,14 @@ const routes: Routes = [
     data: { role: 'Conductor' }
   },
   {
+    path: 'perfil',
+    loadChildren: () => import('./perfil/perfil.module').then( m => m.PerfilPageModule)
+  },
+  {
     path: '**',//<--- NOTFOUND TIENE QUE IR AL FINAL DEL ARREGLO
     loadChildren: () => import('./not-found/not-found.module').then( m => m.NotFoundPageModule)
   }
+
 ];
 
 @NgModule({

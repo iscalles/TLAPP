@@ -6,6 +6,17 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
+    children: [
+      {
+        path: 'home',
+        redirectTo: '/home',
+        pathMatch: 'full'
+      },
+      {
+        path: 'perfil',
+        loadChildren: () => import('../perfil/perfil.module').then(m => m.PerfilPageModule)
+      }
+    ]
   }
 ];
 
@@ -14,3 +25,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class HomePageRoutingModule {}
+

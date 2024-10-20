@@ -1,0 +1,28 @@
+#container {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.img{
+    padding:25px;
+    width:200px;
+    align-self:center;
+}
+.profile-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+.profile-avatar{
+    width: 100px;
+    height: 100px;
+}
+.profile-name{
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+}
