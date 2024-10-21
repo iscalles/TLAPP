@@ -5,7 +5,7 @@
       "name": "Pepe Tapia",
       "email": "pepetapia@gmail.com",
       "password": "pepe1234",
-      "rut": "11873049-2",
+      "rut": "11830049-2",
       "rol": "Conductor"
     },
     {
@@ -91,18 +91,6 @@
       "estado": "completado"
     },
     {
-      "id": "103",
-      "conductorId": "6",
-      "pasajeroId": "5",
-      "direccionInicio": "Plaza Mayor 100, Ciudad de México",
-      "direccionFinal": "Avenida Reforma 200, Ciudad de México",
-      "horaInicio": "10:15:00",
-      "horaTermino": "10:45:00",
-      "distancia": 12,
-      "precio": 2000,
-      "estado": "completado"
-    },
-    {
       "id": "104",
       "conductorId": "1",
       "pasajeroId": "7",
@@ -137,18 +125,6 @@
       "distancia": 11.5,
       "precio": 1900,
       "estado": "completado"
-    },
-    {
-      "id": "9fdf",
-      "conductorId": "",
-      "pasajeroId": "",
-      "direccionInicio": "Calle Tercera 1202, Placilla",
-      "direccionFinal": "Av. Las Nalcas 405, Placilla",
-      "horaInicio": "",
-      "horaTermino": "",
-      "distancia": 0,
-      "precio": 0,
-      "estado": "pendiente"
     }
   ]
 }

@@ -1,13 +1,10 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Perfil del Conductor</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()">Cerrar Sesión</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding-horizontal">
+  <div class="profile-header">
+    <ion-avatar class="profile-avatar">
+      <img src="assets/icon/perfil1.jpg" alt="Profile Icon">
+    </ion-avatar>
+  </div>
 
-<ion-content>
   <ion-list>
     <ion-item>
       <ion-label position="stacked">Nombre</ion-label>
@@ -26,7 +23,9 @@
       <ion-input [(ngModel)]="user.rol" [readonly]="true"></ion-input>
     </ion-item>
   </ion-list>
-
-  <ion-button expand="full" *ngIf="!editMode" (click)="enableEditMode()">Editar</ion-button>
-  <ion-button expand="full" *ngIf="editMode" (click)="saveProfileChanges()">Actualizar</ion-button>
+  <br>
+  <ion-button color="secondary" expand="full" *ngIf="!editMode" (click)="enableEditMode()">Editar</ion-button>
+  <ion-button color="secondary" expand="full" *ngIf="editMode" (click)="saveProfileChanges()">Actualizar</ion-button>
+  <br>
+  <ion-button color="secondary" expand="full" (click)="logout()">Cerrar Sesión</ion-button>
 </ion-content>

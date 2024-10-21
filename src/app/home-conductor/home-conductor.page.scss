@@ -1,0 +1,10 @@
+.img{
+    padding:20px;
+    width:200px;
+    align-self:center;
+}
+
+ion-segment-button {
+    --color-checked: #80e24e; /* Cambia el color del texto del botón activo */
+    --indicator-color: #80e24e; /* Cambia el color del indicador bajo el botón activo */
+}

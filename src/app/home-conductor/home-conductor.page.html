@@ -1,25 +1,34 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Home Conductor</ion-title>
-  </ion-toolbar>
+  <div class="ion-text-center ion-margin-top">
+    <img class="img" src="assets/icon/logoapp.png" />
+  </div>
 </ion-header>
 
-<ion-content>
-  <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
-    <ion-segment-button value="inicio">
-      Inicio
-    </ion-segment-button>
-    <ion-segment-button value="viajes">
-      Viajes
-    </ion-segment-button>
-    <ion-segment-button value="perfil">
-      Perfil
-    </ion-segment-button>
-  </ion-segment>
-
+<ion-content style="padding-bottom: 60px;">
+  <!-- El contenido de cada segmento (inicio, viajes, perfil) -->
   <ng-container [ngSwitch]="selectedSegment">
     <app-inicio-conductor *ngSwitchCase="'inicio'"></app-inicio-conductor>
     <app-viajes-conductor *ngSwitchCase="'viajes'"></app-viajes-conductor>
     <app-perfil-conductor *ngSwitchCase="'perfil'"></app-perfil-conductor>
   </ng-container>
 </ion-content>
+
+<!-- Menú fijo en la parte inferior -->
+<ion-footer class="menu-horizontal">
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="inicio">
+        <ion-icon color="secondary" name="home"></ion-icon>
+        <ion-label >Inicio</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="viajes">
+        <ion-icon color="secondary" name="car"></ion-icon>
+        <ion-label >Viajes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="perfil">
+        <ion-icon color="secondary" name="person"></ion-icon>
+        <ion-label >Perfil</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-footer>
