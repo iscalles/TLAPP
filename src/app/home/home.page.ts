@@ -24,7 +24,6 @@ export class HomePage implements AfterViewInit {
     console.log("ngAfterViewInit ejecutado");
     console.log("Referencia a searchInput:", this.searchInput);
     
-    await this.loadGoogleMaps();
     await this.loadMap();
   
     // Usa un pequeño retraso para asegurar que el DOM esté completamente cargado
@@ -34,21 +33,6 @@ export class HomePage implements AfterViewInit {
     console.log("Componente inicializado completamente:", this.searchInput, this.mapElement);// Prueba con un retraso de 300 ms
   }
 
-  private async loadGoogleMaps(): Promise<void> {
-    if (!window.google) {
-      return new Promise((resolve) => {
-        const script = document.createElement('script');
-        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCQVlePODfWpk6ZfBCx51vXA3UAIyK69Fw&libraries=places';
-        script.onload = () => {
-          console.log("Google Maps API cargado");
-          resolve(); 
-        }; 
-        document.body.appendChild(script);
-      });
-    } else {
-      return Promise.resolve();
-    }
-  }
 
   async loadMap() {
     const coordinates = await Geolocation.getCurrentPosition();
