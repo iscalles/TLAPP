@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { IonSearchbar } from '@ionic/angular';
+import { GuardService } from '../guard.service';
 
 // Extendemos la interfaz Window para incluir la propiedad google
 interface Window {
@@ -15,10 +16,11 @@ declare var google: any;
 })
 export class HomePage implements AfterViewInit {
   @ViewChild('map', { static: false }) mapElement!: ElementRef;
-  @ViewChild('searchInput', { static: false }) searchInput!: IonSearchbar; // Cambia ElementRef por IonSearchbar
+  @ViewChild('searchInput', { static: false }) searchInput!: IonSearchbar;
   map!: any;
+  user: any;
 
-  constructor() {}
+  constructor(private guardService: GuardService) {}
 
   async ngAfterViewInit() {
     console.log("ngAfterViewInit ejecutado");
@@ -30,9 +32,8 @@ export class HomePage implements AfterViewInit {
     setTimeout(() => {
       this.setupSearchBox();
     }, 300); 
-    console.log("Componente inicializado completamente:", this.searchInput, this.mapElement);// Prueba con un retraso de 300 ms
+    console.log("Componente inicializado completamente:", this.searchInput, this.mapElement);
   }
-
 
   async loadMap() {
     const coordinates = await Geolocation.getCurrentPosition();
@@ -51,7 +52,7 @@ export class HomePage implements AfterViewInit {
       title: "Estás aquí",
     });
   
-    console.log("Mapa cargado"); // Agrega un log aquí
+    console.log("Mapa cargado");
   }
 
   setupSearchBox() {
@@ -66,30 +67,44 @@ export class HomePage implements AfterViewInit {
     this.searchInput.getInputElement().then((input: HTMLInputElement) => {
         const searchBox = new google.maps.places.SearchBox(input);
 
+        if (!this.map) {
+            console.error("Mapa no está definido");
+            return;
+        }
+
         this.map.addListener('bounds_changed', () => {
             searchBox.setBounds(this.map.getBounds()!);
         });
 
         searchBox.addListener('places_changed', () => {
             const places = searchBox.getPlaces();
-            if (places.length === 0) return;
+            if (!places || places.length === 0) {
+                console.error("No se encontraron lugares");
+                return;
+            }
 
             const bounds = new google.maps.LatLngBounds();
-            places.forEach((place: any) => {
-                if (!place.geometry) {
-                    console.log("No details available for input: '" + place.name + "'");
-                    return;
-                }
-                if (place.geometry.viewport) {
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
-            });
-            this.map.fitBounds(bounds);
+            // Additional code to handle places and bounds
         });
-    }).catch((error: any) => {
+    }).catch(error => {
         console.error("Error al obtener el elemento de entrada:", error);
     });
+  }
+
+  async loadUser() {
+    const userId = this.guardService.getUserId();
+    if (userId) {
+      console.log("Cargando usuario con ID:", userId);
+      try {
+        this.user = await this.guardService.getUserById(userId).toPromise();
+        console.log("Usuario cargado:", this.user);
+      } catch (error) {
+        console.error("Error al cargar el usuario:", error);
+        this.user = { nombre: 'Invitado' }; // Valor por defecto en caso de error
+      }
+    } else {
+      console.log("No hay usuario autenticado, asignando usuario por defecto.");
+      this.user = { nombre: 'Invitado' }; // Valor por defecto si no hay usuario autenticado
+    }
   }
 }

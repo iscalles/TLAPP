@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -69,5 +69,15 @@ export class GuardService {
     localStorage.removeItem(this.authTokenKey);
     localStorage.removeItem(this.userRoleKey);
     localStorage.removeItem(this.userIdKey); // Elimina también el userId
+  }
+
+  getUserById(userId: number): Observable<any> {
+    // Implementación para obtener el usuario por ID
+    return this.http.get<any>(`${this.apiUrl}/${userId}`).pipe(
+      catchError(error => {
+        console.error('Error en getUserById:', error);
+        return throwError(error); // Propaga el error para que pueda ser manejado por el llamador
+      })
+    );
   }
 }
