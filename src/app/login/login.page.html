@@ -30,15 +30,15 @@
       </ion-card-title>
       <ion-card-content>
         <ion-item>
-          <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Enter a valid email" errorText="Invalid email" ngModel email [(ngModel)]="login.Email"></ion-input>
+          <ion-input type="email" fill="solid" label="Email" labelPlacement="floating" helperText="Enter a valid email" errorText="Invalid email" ngModel email [(ngModel)]="login.Email" name="username"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input class="ion-margin-top" type="password" label="Contraseña" labelPlacement="floating" [(ngModel)]="login.Password"></ion-input>
+          <ion-input class="ion-margin-top" type="password" label="Contraseña" labelPlacement="floating" [(ngModel)]="login.Password" name="password"></ion-input>
         </ion-item>
       </ion-card-content>
       <ion-row>
         <ion-col col-6>
-          <ion-button color="secondary" shape="block" (click)="ingresar()" class="ion-margin">
+          <ion-button color="secondary" shape="block" (click)="ingresar()" class="ion-margin" type="submit">
             Ingresar
           </ion-button>
         </ion-col>

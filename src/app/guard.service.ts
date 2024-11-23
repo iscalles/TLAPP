@@ -10,7 +10,7 @@ export class GuardService {
   private userRoleKey = "userRole"; 
   private userIdKey = "userId"; // Nueva clave para almacenar userId
   private loggedIn: boolean = false;
-  private apiUrl = 'http://localhost:3000/users'; 
+  public apiUrl = 'http://localhost:3000/users';
 
   constructor(private http: HttpClient) {}
 
