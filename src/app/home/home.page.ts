@@ -1,95 +1,14 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Geolocation } from '@capacitor/geolocation';
-import { IonSearchbar } from '@ionic/angular';
-
-// Extendemos la interfaz Window para incluir la propiedad google
-interface Window {
-  google: any;
-}
-declare var google: any;
+import { Component} from '@angular/core';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements AfterViewInit {
-  @ViewChild('map', { static: false }) mapElement!: ElementRef;
-  @ViewChild('searchInput', { static: false }) searchInput!: IonSearchbar; // Cambia ElementRef por IonSearchbar
-  map!: any;
+export class HomePage {   selectedSegment = 'inicio';
 
-  constructor() {}
-
-  async ngAfterViewInit() {
-    console.log("ngAfterViewInit ejecutado");
-    console.log("Referencia a searchInput:", this.searchInput);
-    
-    await this.loadMap();
-  
-    // Usa un pequeño retraso para asegurar que el DOM esté completamente cargado
-    setTimeout(() => {
-      this.setupSearchBox();
-    }, 300); 
-    console.log("Componente inicializado completamente:", this.searchInput, this.mapElement);// Prueba con un retraso de 300 ms
-  }
-
-
-  async loadMap() {
-    const coordinates = await Geolocation.getCurrentPosition();
-    const latLng = new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude);
-  
-    const mapOptions = {
-      center: latLng,
-      zoom: 15,
-    };
-  
-    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-  
-    new google.maps.Marker({
-      position: latLng,
-      map: this.map,
-      title: "Estás aquí",
-    });
-  
-    console.log("Mapa cargado"); // Agrega un log aquí
-  }
-
-  setupSearchBox() {
-    // Verificar que searchInput esté definido
-    console.log("Elemento de búsqueda:", this.searchInput);
-    if (!this.searchInput) {
-        console.error("searchInput no está definido");
-        return;
-    }
-
-    // Usar el método getInputElement() del componente IonSearchbar
-    this.searchInput.getInputElement().then((input: HTMLInputElement) => {
-        const searchBox = new google.maps.places.SearchBox(input);
-
-        this.map.addListener('bounds_changed', () => {
-            searchBox.setBounds(this.map.getBounds()!);
-        });
-
-        searchBox.addListener('places_changed', () => {
-            const places = searchBox.getPlaces();
-            if (places.length === 0) return;
-
-            const bounds = new google.maps.LatLngBounds();
-            places.forEach((place: any) => {
-                if (!place.geometry) {
-                    console.log("No details available for input: '" + place.name + "'");
-                    return;
-                }
-                if (place.geometry.viewport) {
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
-            });
-            this.map.fitBounds(bounds);
-        });
-    }).catch((error: any) => {
-        console.error("Error al obtener el elemento de entrada:", error);
-    });
-  }
+segmentChanged(event: any) {
+  this.selectedSegment = event.detail.value;
+}
+constructor() {}
 }

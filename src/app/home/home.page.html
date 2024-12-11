@@ -1,37 +1,34 @@
-<ion-content [fullscreen]="true" class="ion-padding-horizontal ion-padding-vertical">
+<ion-header>
   <div class="ion-text-center ion-margin-top">
     <img class="img" src="assets/icon/logoapp.png" />
   </div>
-  <div>
-    <div class="title-container">
-      <ion-label>
-        <h1>Hola, </h1>
-      </ion-label>
-    </div>
-  </div>
-  <br>
-  <div>
-    <!-- Barra de búsqueda -->
-    <ion-searchbar #searchInput animated="true" placeholder="¿A dónde quieres ir?" position="stacked"></ion-searchbar>
-  </div>
+</ion-header>
 
-  <!-- Contenedor del mapa -->
-  <div #map id="map" style="height: 80%;"></div>
-  
-  <!-- Menú horizontal -->
-  <ion-footer>
-    <ion-toolbar>
-      <ion-segment>
-        <ion-segment-button value="viajes">
-          Viajes
-        </ion-segment-button>
-        <ion-segment-button value="perfil">
-          Perfil
-        </ion-segment-button>
-        <ion-segment-button value="configuración">
-          Configuración
-        </ion-segment-button>
-      </ion-segment>
-    </ion-toolbar>
-  </ion-footer>
+<ion-content style="padding-bottom: 60px;">
+  <!-- El contenido de cada segmento (inicio, viajes, perfil) -->
+  <ng-container [ngSwitch]="selectedSegment">
+    <app-inicio-home *ngSwitchCase="'inicio'"></app-inicio-home>
+    <app-viajes-home *ngSwitchCase="'viajes'"></app-viajes-home>
+    <app-perfil-home *ngSwitchCase="'perfil'"></app-perfil-home>
+  </ng-container>
 </ion-content>
+
+<!-- Menú fijo en la parte inferior -->
+<ion-footer class="menu-horizontal">
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="inicio">
+        <ion-icon color="secondary" name="home"></ion-icon>
+        <ion-label >Inicio</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="viajes">
+        <ion-icon color="secondary" name="car"></ion-icon>
+        <ion-label >Viajes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="perfil">
+        <ion-icon color="secondary" name="person"></ion-icon>
+        <ion-label >Perfil</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-footer>
