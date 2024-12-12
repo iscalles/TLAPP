@@ -1,5 +1,7 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
+import { ViajeService } from '../../viaje.service';
+import { ToastController } from '@ionic/angular';
 
 declare var google: any;
 
@@ -11,31 +13,161 @@ declare var google: any;
 export class InicioConductorComponent implements AfterViewInit {
   @ViewChild('map', { static: false }) mapElement!: ElementRef;
   map!: any;
+  directionsService!: any;
+  directionsRenderer!: any;
+  geocoder!: any;
+  markerInicio!: any;
+  markerFinal!: any;
+  showCreateForm = false; // Para mostrar/ocultar el formulario
+  nuevoViaje = {
+    direccionInicio: '',
+    direccionFinal: '',
+    distancia: 0,
+    precio: 0,
+    cupos: 0, // Nuevo campo para los cupos
+    estado: 'pendiente'
+  };
+  seleccionandoInicio = true; // Para determinar si estamos seleccionando la dirección de inicio o final
 
-  constructor() {}
+  constructor(private viajeService: ViajeService, private toastController: ToastController) {}
 
   async ngAfterViewInit() {
     await this.loadMap();
   }
 
   async loadMap() {
-    // Obtener la posición actual
     const coordinates = await Geolocation.getCurrentPosition();
     const latLng = new google.maps.LatLng(coordinates.coords.latitude, coordinates.coords.longitude);
 
-    // Configuraciones del mapa
     const mapOptions = {
       center: latLng,
       zoom: 15,
     };
 
-    // Crear el mapa y agregar un marcador
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
-    new google.maps.Marker({
-      position: latLng,
-      map: this.map,
-      title: "Estás aquí",
+
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsRenderer = new google.maps.DirectionsRenderer({
+      suppressMarkers: true // Suprimir los marcadores predeterminados
     });
+    this.directionsRenderer.setMap(this.map);
+    this.geocoder = new google.maps.Geocoder();
+
+    // Agregar manejador de eventos de clic en el mapa
+    this.map.addListener('click', (event: any) => {
+      this.handleMapClick(event.latLng);
+    });
+  }
+
+  // Manejar clics en el mapa
+  handleMapClick(latLng: any) {
+    this.geocoder.geocode({ location: latLng }, (results: any, status: any) => {
+      if (status === google.maps.GeocoderStatus.OK) {
+        if (results[0]) {
+          const address = results[0].formatted_address;
+          if (this.seleccionandoInicio) {
+            this.nuevoViaje.direccionInicio = address;
+            if (this.markerInicio) {
+              this.markerInicio.setMap(null); // Eliminar marcador anterior si existe
+            }
+            this.markerInicio = new google.maps.Marker({
+              position: latLng,
+              map: this.map,
+              title: "Inicio",
+            });
+          } else {
+            this.nuevoViaje.direccionFinal = address;
+            if (this.markerFinal) {
+              this.markerFinal.setMap(null); // Eliminar marcador anterior si existe
+            }
+            this.markerFinal = new google.maps.Marker({
+              position: latLng,
+              map: this.map,
+              title: "Final",
+            });
+            this.trazarRuta(this.nuevoViaje.direccionInicio, this.nuevoViaje.direccionFinal);
+          }
+        }
+      } else {
+        console.error('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
+
+  // Confirmar la dirección de inicio
+  confirmarDireccionInicio() {
+    this.seleccionandoInicio = false; // Cambiar a seleccionar dirección final
+  }
+
+  // Trazar la ruta en el mapa y calcular la distancia
+  trazarRuta(direccionInicio: string, direccionFinal: string) {
+    const request = {
+      origin: direccionInicio,
+      destination: direccionFinal,
+      travelMode: google.maps.TravelMode.DRIVING
+    };
+
+    this.directionsService.route(request, (result: any, status: any) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        this.directionsRenderer.setDirections(result);
+        const route = result.routes[0];
+        const distance = route.legs[0].distance.value / 1000; // Convertir metros a kilómetros
+        this.nuevoViaje.distancia = distance;
+        this.nuevoViaje.direccionFinal = direccionFinal; // Asegurarse de que la dirección final se actualice
+      } else {
+        console.error('Error al trazar la ruta:', status);
+      }
+    });
+  }
+
+  // Crear un nuevo viaje
+  async crearViaje() {
+    if (this.nuevoViaje.direccionInicio && this.nuevoViaje.direccionFinal && this.nuevoViaje.distancia > 0 && this.nuevoViaje.precio > 0 && this.nuevoViaje.cupos >= 1 && this.nuevoViaje.cupos <= 4) {
+      const nuevoViajeConId = { ...this.nuevoViaje, id: this.generateId(), conductorId: this.getConductorId() };
+
+      this.viajeService.createViaje(nuevoViajeConId).subscribe(() => {
+        this.loadViajes(); // Actualiza la lista de viajes después de crear el nuevo
+        this.toggleCreateForm(); // Oculta el formulario después de crear
+        this.nuevoViaje = { direccionInicio: '', direccionFinal: '', distancia: 0, precio: 0, cupos: 0, estado: 'pendiente' }; // Reinicia los valores del formulario
+        if (this.markerInicio) {
+          this.markerInicio.setMap(null); // Eliminar marcador de inicio
+        }
+        if (this.markerFinal) {
+          this.markerFinal.setMap(null); // Eliminar marcador de final
+        }
+        this.presentToast('El viaje se creó exitosamente.');
+      });
+    } else {
+      console.error('Los cupos deben estar entre 1 y 4.');
+      this.presentToast('Los cupos disponibles deben ser entre 1 y 4.');
+    }
+    
+  }
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  // Métodos adicionales para generar ID y obtener el ID del conductor
+  generateId(): string {
+    return Math.random().toString(36).substr(2, 9);
+  }
+
+  getConductorId(): string {
+    return localStorage.getItem('userId') || '';
+  }
+
+  // Métodos adicionales para cargar viajes y alternar el formulario
+  loadViajes() {
+    // Implementa la lógica para cargar los viajes
+  }
+
+  toggleCreateForm() {
+    this.showCreateForm = !this.showCreateForm;
   }
 }

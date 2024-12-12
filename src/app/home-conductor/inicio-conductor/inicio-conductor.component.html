@@ -1,5 +1,31 @@
-
-<ion-content style="padding-bottom: 60px;">
+<ion-content style="padding-bottom: 60px;" scrollPadding="false">
   <!-- Contenido del componente aquí -->
-  <div #map id="map" style="height: 100%;"></div>
+  <div #map id="map" style="height: 400px;"></div>
+  <ion-card *ngIf="showCreateForm">
+    <ion-card-content class="scrollable-card-content">
+      <ion-item>
+        <ion-label position="floating">Dirección Inicio</ion-label>
+        <ion-input [(ngModel)]="nuevoViaje.direccionInicio" readonly></ion-input>
+      </ion-item>
+      <ion-button (click)="confirmarDireccionInicio()" expand="full" color="secondary" *ngIf="seleccionandoInicio">Confirmar Dirección Inicio</ion-button>
+      <ion-item *ngIf="!seleccionandoInicio">
+        <ion-label position="floating">Dirección Final</ion-label>
+        <ion-input [(ngModel)]="nuevoViaje.direccionFinal" readonly></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Distancia (km)</ion-label>
+        <ion-input type="number" [(ngModel)]="nuevoViaje.distancia" readonly></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Precio</ion-label>
+        <ion-input type="number" [(ngModel)]="nuevoViaje.precio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Cupos (max. 4)</ion-label>
+        <ion-input type="number" [(ngModel)]="nuevoViaje.cupos" min="1" max="4"></ion-input>
+      </ion-item>
+      <ion-button (click)="crearViaje()" expand="full" color="secondary">Crear Viaje</ion-button>
+    </ion-card-content>
+  </ion-card>
+  <ion-button id="creaviaje" *ngIf="!showCreateForm" (click)="toggleCreateForm()" expand="full" color="secondary">Crear Viaje</ion-button>
 </ion-content>

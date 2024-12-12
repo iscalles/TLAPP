@@ -1,0 +1,15 @@
+.profile-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+.profile-avatar{
+    width: 100px;
+    height: 100px;
+}
+.profile-name{
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+}

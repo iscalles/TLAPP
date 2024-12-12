@@ -67,64 +67,14 @@
   ],
   "viajes": [
     {
-      "id": "101",
-      "conductorId": "1",
-      "pasajeroId": "2",
-      "direccionInicio": "Av. Siempre Viva 742, Springfield",
-      "direccionFinal": "Calle Falsa 123, Springfield",
-      "horaInicio": "08:30:00",
-      "horaTermino": "08:50:00",
-      "distancia": 8.5,
-      "precio": 1500,
-      "estado": "completado"
-    },
-    {
-      "id": "102",
-      "conductorId": "3",
-      "pasajeroId": "4",
-      "direccionInicio": "Av. Central 500, San Juan",
-      "direccionFinal": "Calle Rosa 78, San Juan",
-      "horaInicio": "09:00:00",
-      "horaTermino": "09:20:00",
-      "distancia": 10.2,
-      "precio": 1800,
-      "estado": "completado"
-    },
-    {
-      "id": "104",
-      "conductorId": "1",
-      "pasajeroId": "7",
-      "direccionInicio": "Calle Luna 15, Madrid",
-      "direccionFinal": "Calle Sol 25, Madrid",
-      "horaInicio": "11:10:00",
-      "horaTermino": "11:30:00",
-      "distancia": 6.5,
-      "precio": 1200,
-      "estado": "completado"
-    },
-    {
-      "id": "105",
-      "conductorId": "8",
-      "pasajeroId": "3",
-      "direccionInicio": "Calle 12, Bogotá",
-      "direccionFinal": "Calle 45, Bogotá",
-      "horaInicio": "12:00:00",
-      "horaTermino": "12:20:00",
-      "distancia": 8,
-      "precio": 1600,
-      "estado": "completado"
-    },
-    {
-      "id": "106",
-      "conductorId": "4",
-      "pasajeroId": "1",
-      "direccionInicio": "Calle Libertad 20, Lima",
-      "direccionFinal": "Calle Independencia 40, Lima",
-      "horaInicio": "13:00:00",
-      "horaTermino": "13:30:00",
-      "distancia": 11.5,
-      "precio": 1900,
-      "estado": "completado"
+      "id": "bbwf6tbg4",
+      "direccionInicio": "Segunda 1153, Placilla, Valparaíso, Chile",
+      "direccionFinal": "Las Nalcas 415, Curauma, Valparaíso, Chile",
+      "distancia": 5.085,
+      "precio": 5000,
+      "cupos": 3,
+      "estado": "pendiente",
+      "conductorId": "1"
     }
   ]
 }

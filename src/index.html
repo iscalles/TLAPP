@@ -6,6 +6,16 @@
   <!-- Script de google maps  -->
   <title>Ionic App</title>
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQVlePODfWpk6ZfBCx51vXA3UAIyK69Fw&libraries=places" loading="async" ></script>
+  <script>
+    // Configurar el modo de Material Design
+    window.Ionic = {
+      config: {
+        mode: 'md', // Configurar el modo de Material Design
+        scrollAssist: false, // Deshabilitar scrollAssist globalmente
+        scrollPadding: false // Deshabilitar scrollPadding globalmente
+      }
+    };
+  </script>
   <base href="/" />
 
   <meta name="color-scheme" content="light dark" />
