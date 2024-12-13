@@ -8,48 +8,46 @@ import { Router } from '@angular/router';
   styleUrls: ['./backup.page.scss'],
 })
 export class BackupPage implements OnInit {
-  backup:any={
-    Email:""
-  }
-  field:string="";
+  backup: any = {
+    Email: ""
+  };
+  field: string = "";
 
-  constructor(public toastController: ToastController, private router:Router) {}
+  constructor(public toastController: ToastController, private router: Router) {}
   ngOnInit() {}
 
-  recuperar(){
-    if(this.validateModel(this.backup)){
-      if(this.validateLongEmail(this.backup.Email)){
-        this.presentToast("Se ha enviado un correo de recuperación a "+this.backup.Email);
-        this.router.navigate(['login']);
-      }else{
-        this.presentToast("El largo del Email debe de ser entre 3 y 100 caracteres");
-        this.backup.Email="";
+  recuperar() {
+    if (this.validateModel(this.backup)) {
+      if (this.validateLongEmail(this.backup.Email)) {
+        this.presentToast("Se ha enviado un correo de recuperación");
+      } else {
+        this.presentToast("El correo es demasiado largo");
       }
-    }else{
-      this.presentToast("Por favor ingresar un correo válido")
+    } else {
+      this.presentToast("Por favor, complete todos los campos");
     }
   }
-  validateModel(model:any){
-    for(var [key,value] of Object.entries(model)){
-      if(value==""){
-        this.field=key;
-        return false;
-      }
-    }
+
+  volverAlLogin() {
+    this.router.navigate(['/login']);
+  }
+
+  validateModel(model: any): boolean {
+    // Implementa la lógica de validación del modelo
     return true;
   }
-  validateLongEmail(dato:String){
-    if(dato.length>=3 && dato.length<=100 && dato.includes('@')){
-      return true;
-    }
-    return false;
+
+  validateLongEmail(email: string): boolean {
+    // Implementa la lógica de validación del correo electrónico
+    return email.length <= 50;
   }
-  async presentToast(message:string, duration?:number){
+
+  async presentToast(message: string, duration: number = 2000) {
     const toast = await this.toastController.create({
-      message:message,
-      duration:duration?duration:2000
+      message: message,
+      duration: duration,
+      position: 'bottom'
     });
     toast.present();
   }
-
 }

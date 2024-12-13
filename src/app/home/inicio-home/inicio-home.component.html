@@ -1,4 +1,39 @@
-<ion-content style="padding-bottom: 60px;">
+<ion-content style="padding-bottom: 60px;" scrollPadding="false">
   <!-- Contenido del componente aquí -->
-  <div #map id="map" style="height: 100%;"></div>
+  <div #map id="map" style="height: 400px;"></div>
+  <ion-card *ngIf="viajeTomado">
+    <ion-card-content class="scrollable-card-content">
+      <ion-item>
+        <ion-label>
+          <h3>Inicio: {{ viajeTomado.direccionInicio }}</h3>
+          <h3>Final: {{ viajeTomado.direccionFinal }}</h3>
+          <p>Distancia: {{ viajeTomado.distancia }} km</p>
+          <p>Precio: ${{ viajeTomado.precio }} </p>
+          <p>Cupos Disponibles: {{ viajeTomado.cupos }}</p>
+        </ion-label>
+      </ion-item>
+      <ion-button expand="full" color="secondary" (click)="cancelarViaje()">Cancelar Viaje</ion-button>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="!viajeTomado && viajesPendientes.length > 0">
+    <ion-card-content class="scrollable-card-content">
+      <ion-list>
+        <ion-item *ngFor="let viaje of viajesPendientes">
+          <ion-label>
+            <h3>Inicio: {{ viaje.direccionInicio }}</h3>
+            <h3>Final: {{ viaje.direccionFinal }}</h3>
+            <p>Distancia: {{ viaje.distancia }} km</p>
+            <p>Precio: ${{ viaje.precio }} </p>
+            <p>Cupos Disponibles: {{ viaje.cupos }}</p>
+          </ion-label>
+          <ion-button slot="end" color="secondary" (click)="tomarViaje(viaje)">Tomar Viaje</ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="!viajeTomado && viajesPendientes.length === 0">
+    <ion-card-content>
+      <p>No hay viajes disponibles.</p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

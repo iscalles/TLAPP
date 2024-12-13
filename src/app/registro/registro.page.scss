@@ -26,13 +26,7 @@
   #container a {
     text-decoration: none;
   }
-  .img{
-    padding:25px;
-    width:200px;
-    align-self:center;
-    display: block;
-    align-items: center;
-  }
+
   .title-container{
     display:flex; 
     justify-content: center;
@@ -52,3 +46,8 @@
     z-index: 10;
     justify-content: center;
   }
+  .img{
+    padding:20px;
+    width:200px;
+    align-self:center;
+}

@@ -1,41 +1,25 @@
-<ion-content class="ion-padding">
-  <!-- Lista de Viajes -->
-  <ion-list>
-    <ion-item *ngFor="let viaje of viajes">
-      <ion-label>
-        <h2>Viaje: {{ viaje.direccionInicio }} -> {{ viaje.direccionFinal }}</h2>
-        <p>Estado: {{ viaje.estado }}</p>
-        <p>Precio: ${{ viaje.precio }}</p>
-      </ion-label>
-      <ion-button (click)="deleteViaje(viaje.id)" fill="clear" color="danger">Eliminar</ion-button>
-    </ion-item>
-  </ion-list>
-
-  <!-- Formulario para agregar un nuevo viaje -->
-  <ion-card *ngIf="showCreateForm">
+<ion-content style="padding-bottom: 60px;" scrollPadding="false">
+  <!-- Contenido del componente aquí -->
+   <br><br>
+  <ion-title>
+    Viajes Tomados
+  </ion-title>
+  <br>
+  <ion-card *ngIf="viajesUsuario.length > 0">
+    <ion-list>
+      <ion-item *ngFor="let viaje of viajesUsuario">
+        <ion-label>
+          <h2>Inicio: {{ viaje.direccionInicio }}</h2>
+          <h2>Final: {{ viaje.direccionFinal }}</h2>
+          <p>Distancia: {{ viaje.distancia }} km</p>
+          <p>Precio: ${{ viaje.precio }} </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+  <ion-card *ngIf="viajesUsuario.length === 0">
     <ion-card-content>
-      <ion-item>
-        <ion-label position="floating">Dirección Inicio</ion-label>
-        <ion-input [(ngModel)]="nuevoViaje.direccionInicio"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Dirección Final</ion-label>
-        <ion-input [(ngModel)]="nuevoViaje.direccionFinal"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Distancia (km)</ion-label>
-        <ion-input type="number" [(ngModel)]="nuevoViaje.distancia"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Precio</ion-label>
-        <ion-input type="number" [(ngModel)]="nuevoViaje.precio"></ion-input>
-      </ion-item>
-
-      <!-- Botón para crear el viaje -->
-      <ion-button color="secondary" expand="full" (click)="crearViaje()">Crear Viaje</ion-button>
+      <p>No tienes viajes tomados.</p>
     </ion-card-content>
   </ion-card>
-
-  <!-- Botón para mostrar el formulario de agregar viaje -->
-  <ion-button color="secondary" expand="full" (click)="toggleCreateForm()" class="agregar-viaje-btn">Agregar Viaje</ion-button>
 </ion-content>

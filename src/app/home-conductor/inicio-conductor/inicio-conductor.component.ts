@@ -1,7 +1,8 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { ViajeService } from '../../viaje.service';
 import { ToastController } from '@ionic/angular';
+import { interval, Subscription } from 'rxjs';
 
 declare var google: any;
 
@@ -10,7 +11,7 @@ declare var google: any;
   templateUrl: './inicio-conductor.component.html',
   styleUrls: ['./inicio-conductor.component.scss'],
 })
-export class InicioConductorComponent implements AfterViewInit {
+export class InicioConductorComponent implements AfterViewInit, OnDestroy {
   @ViewChild('map', { static: false }) mapElement!: ElementRef;
   map!: any;
   directionsService!: any;
@@ -27,12 +28,28 @@ export class InicioConductorComponent implements AfterViewInit {
     cupos: 0, // Nuevo campo para los cupos
     estado: 'pendiente'
   };
+  viajeCreado: any = null; // Para almacenar el viaje creado
   seleccionandoInicio = true; // Para determinar si estamos seleccionando la dirección de inicio o final
+  private updateSubscription!: Subscription;
 
-  constructor(private viajeService: ViajeService, private toastController: ToastController) {}
+  constructor(
+    private viajeService: ViajeService,
+    private toastController: ToastController
+  ) {}
 
   async ngAfterViewInit() {
     await this.loadMap();
+    this.viajeCreado = this.viajeService.getViajeCreado();
+    if (this.viajeCreado) {
+      this.trazarRuta(this.viajeCreado.direccionInicio, this.viajeCreado.direccionFinal);
+      this.startUpdatingViaje();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
   }
 
   async loadMap() {
@@ -126,8 +143,9 @@ export class InicioConductorComponent implements AfterViewInit {
     if (this.nuevoViaje.direccionInicio && this.nuevoViaje.direccionFinal && this.nuevoViaje.distancia > 0 && this.nuevoViaje.precio > 0 && this.nuevoViaje.cupos >= 1 && this.nuevoViaje.cupos <= 4) {
       const nuevoViajeConId = { ...this.nuevoViaje, id: this.generateId(), conductorId: this.getConductorId() };
 
-      this.viajeService.createViaje(nuevoViajeConId).subscribe(() => {
-        this.loadViajes(); // Actualiza la lista de viajes después de crear el nuevo
+      this.viajeService.createViaje(nuevoViajeConId).subscribe((viaje) => {
+        this.viajeService.setViajeCreado(viaje); // Almacenar el viaje creado en el servicio compartido
+        this.viajeCreado = viaje; // Almacenar el viaje creado localmente
         this.toggleCreateForm(); // Oculta el formulario después de crear
         this.nuevoViaje = { direccionInicio: '', direccionFinal: '', distancia: 0, precio: 0, cupos: 0, estado: 'pendiente' }; // Reinicia los valores del formulario
         if (this.markerInicio) {
@@ -137,13 +155,59 @@ export class InicioConductorComponent implements AfterViewInit {
           this.markerFinal.setMap(null); // Eliminar marcador de final
         }
         this.presentToast('El viaje se creó exitosamente.');
+        this.trazarRuta(viaje.direccionInicio, viaje.direccionFinal); // Trazar la ruta del viaje creado
+        this.startUpdatingViaje(); // Iniciar la actualización periódica del viaje
       });
     } else {
       console.error('Los cupos deben estar entre 1 y 4.');
       this.presentToast('Los cupos disponibles deben ser entre 1 y 4.');
     }
-    
   }
+
+  // Iniciar la actualización periódica del viaje
+  startUpdatingViaje() {
+    this.updateSubscription = interval(5000).subscribe(() => {
+      if (this.viajeCreado) {
+        this.viajeService.getViajeById(this.viajeCreado.id).subscribe((viaje) => {
+          this.viajeCreado = viaje;
+        });
+      }
+    });
+  }
+
+  // Cancelar el viaje
+  cancelarViaje() {
+    if (this.viajeCreado) {
+      this.viajeService.deleteViaje(this.viajeCreado.id).subscribe(() => {
+        this.presentToast('El viaje ha sido cancelado.');
+        this.viajeService.clearViajeCreado(); // Limpiar el estado del viaje creado en el servicio compartido
+        this.viajeCreado = null;
+        this.directionsRenderer.setDirections({ routes: [] }); // Limpiar la ruta del mapa
+        if (this.updateSubscription) {
+          this.updateSubscription.unsubscribe(); // Detener la actualización periódica
+        }
+      });
+    }
+  }
+
+  // Finalizar el viaje
+  finalizarViaje() {
+    if (this.viajeCreado) {
+      this.viajeCreado.estado = 'completado';
+      this.viajeService.updateViaje(this.viajeCreado.id, this.viajeCreado).subscribe(() => {
+        this.presentToast('El viaje ha sido finalizado.');
+        this.viajeService.clearViajeCreado(); // Limpiar el estado del viaje creado en el servicio compartido
+        this.viajeCreado = null;
+        this.directionsRenderer.setDirections({ routes: [] }); // Limpiar la ruta del mapa
+        if (this.updateSubscription) {
+          this.updateSubscription.unsubscribe(); // Detener la actualización periódica
+        }
+        this.viajeService.notifyViajeFinalizado(); // Notificar que el viaje ha sido finalizado
+      });
+    }
+  }
+
+  // Mostrar un toast
   async presentToast(message: string) {
     const toast = await this.toastController.create({
       message: message,

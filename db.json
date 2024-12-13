@@ -63,17 +63,171 @@
       "password": "luispassword",
       "rut": "19275843-2",
       "rol": "Conductor"
+    },
+    {
+      "id": "9pggvxkb4",
+      "name": "Cinthya",
+      "email": "cinthya@gmail.com",
+      "password": "miltonteras71",
+      "rut": "11830049-1",
+      "rol": "Conductor"
     }
   ],
   "viajes": [
     {
-      "id": "bbwf6tbg4",
-      "direccionInicio": "Segunda 1153, Placilla, Valparaíso, Chile",
-      "direccionFinal": "Las Nalcas 415, Curauma, Valparaíso, Chile",
-      "distancia": 5.085,
-      "precio": 5000,
+      "id": "7md9riyc5",
+      "direccionInicio": "Av. Curauma Sur 854, Placilla, Valparaíso, Chile",
+      "direccionFinal": "Ibiza 10, 2372489 Placilla, Valparaíso, Chile",
+      "distancia": 1.651,
+      "precio": 4000,
       "cupos": 3,
-      "estado": "pendiente",
+      "estado": "completado",
+      "conductorId": "1"
+    },
+    {
+      "id": "uio703615",
+      "direccionInicio": "Undécima 750, 2372163 Placilla, Valparaíso, Chile",
+      "direccionFinal": "El Álamo 142, Placilla, Valparaíso, Chile",
+      "distancia": 2.33,
+      "precio": 2500,
+      "cupos": 4,
+      "estado": "completado",
+      "conductorId": "1"
+    },
+    {
+      "id": "9mtyyivoa",
+      "direccionInicio": "Av. Cardenal Samoré 895, Placilla, Valparaíso, Chile",
+      "direccionFinal": "Pje. el Amanecer 109, 2373221 Placilla, Valparaíso, Chile",
+      "distancia": 2.774,
+      "precio": 4000,
+      "cupos": 4,
+      "estado": "completado",
+      "conductorId": "1"
+    },
+    {
+      "id": "38n6w4o29",
+      "direccionInicio": "Pje. Cristóbal Colón 1298, Placilla, Valparaíso, Chile",
+      "direccionFinal": "Javiera Carrera 290, Valparaíso, Chile",
+      "distancia": 16.499,
+      "precio": 10000,
+      "cupos": 4,
+      "estado": "completado",
+      "conductorId": "1"
+    },
+    {
+      "id": "m02988ql4",
+      "direccionInicio": "Av. Blvd. Curauma 1234, Placilla, Valparaíso, Chile",
+      "direccionFinal": "Av. Laguna Curauma 383, 2372501 Valparaíso, Chile",
+      "distancia": 2.596,
+      "precio": 3000,
+      "cupos": 3,
+      "estado": "completado",
+      "conductorId": "1",
+      "pasajeros": []
+    },
+    {
+      "id": "twdajxgfs",
+      "direccionInicio": "Sexta 1242, 2372062 Valparaíso, Chile",
+      "direccionFinal": "Marco Polo 431, 2373290 Valparaíso, Chile",
+      "distancia": 1.654,
+      "precio": 1000,
+      "cupos": 2,
+      "estado": "completado",
+      "conductorId": "1",
+      "pasajeros": [
+        "2"
+      ]
+    },
+    {
+      "id": "10g73ptch",
+      "direccionInicio": "Central - Segunda &, 2341294 Placilla, Valparaíso, Chile",
+      "direccionFinal": "Novena Avenida 360, 2373506 Placilla, Valparaíso, Chile",
+      "distancia": 3.103,
+      "precio": 3500,
+      "cupos": 3,
+      "estado": "completado",
+      "conductorId": "1",
+      "pasajeros": [
+        "2"
+      ]
+    },
+    {
+      "id": "y4szzpoba",
+      "direccionInicio": "El Sauce 1180, Placilla, Valparaíso, Chile",
+      "direccionFinal": "Av. Lomas de la Luz 4650, Valparaíso, Chile",
+      "distancia": 2.959,
+      "precio": 4000,
+      "cupos": 2,
+      "estado": "completado",
+      "conductorId": "1",
+      "pasajeros": [
+        "2"
+      ]
+    },
+    {
+      "id": "rfk1wm4km",
+      "direccionInicio": "Felipe II 502, 2373283 Curauma, Valparaíso, Chile",
+      "direccionFinal": "Cerro El Altar 3829, 2372049 Valparaíso, Chile",
+      "distancia": 2.555,
+      "precio": 1000,
+      "cupos": 3,
+      "estado": "completado",
+      "conductorId": "1"
+    },
+    {
+      "id": "dgaernyhm",
+      "direccionInicio": "C. Conquista De América 183, Placilla, Valparaíso, Chile",
+      "direccionFinal": "VCQW+GF Valparaíso, Chile",
+      "distancia": 3.38,
+      "precio": 3400,
+      "cupos": 1,
+      "estado": "completado",
+      "conductorId": "1",
+      "pasajeros": [
+        "2"
+      ]
+    },
+    {
+      "id": "lyjroasmh",
+      "direccionInicio": "Cuarta 770, Placilla, Valparaíso, Chile",
+      "direccionFinal": "Av. Bernardo O'Higgins 226, Valparaíso, Chile",
+      "distancia": 1.832,
+      "precio": 3000,
+      "cupos": 2,
+      "estado": "completado",
+      "conductorId": "1",
+      "pasajeros": [
+        "2"
+      ]
+    },
+    {
+      "id": "9o8peyyzd",
+      "direccionInicio": "Martínez Cruz 306, 2340000 Valparaíso, Chile",
+      "direccionFinal": "Av. Curauma Nte. 849, 2372603 Placilla, Valparaíso, Chile",
+      "distancia": 3.1,
+      "precio": 3000,
+      "cupos": 3,
+      "estado": "completado",
+      "conductorId": "1"
+    },
+    {
+      "id": "9kghnbnce",
+      "direccionInicio": "Central 1146, 2372164 Valparaíso, Chile",
+      "direccionFinal": "España 123, 2372034 Valparaíso, Chile",
+      "distancia": 3.062,
+      "precio": 2341,
+      "cupos": 3,
+      "estado": "completado",
+      "conductorId": "1"
+    },
+    {
+      "id": "uv5s6u80d",
+      "direccionInicio": "Veintiuno de Mayo 45, Valparaíso, Chile",
+      "direccionFinal": "Republica 645, 2360186 Valparaíso, Chile",
+      "distancia": 1.412,
+      "precio": 3000,
+      "cupos": 2,
+      "estado": "completado",
       "conductorId": "1"
     }
   ]
