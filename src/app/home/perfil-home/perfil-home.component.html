@@ -1,0 +1,31 @@
+<ion-content class="ion-padding-horizontal">
+  <div class="profile-header">
+    <ion-avatar class="profile-avatar">
+      <img src="assets/icon/perfil1.jpg" alt="Profile Icon">
+    </ion-avatar>
+  </div>
+
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input [(ngModel)]="user.name" [readonly]="!editMode"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Email</ion-label>
+      <ion-input [(ngModel)]="user.email" [readonly]="!editMode"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">RUT</ion-label>
+      <ion-input [(ngModel)]="user.rut" [readonly]="!editMode"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Rol</ion-label>
+      <ion-input [(ngModel)]="user.rol" [readonly]="true"></ion-input>
+    </ion-item>
+  </ion-list>
+  <br>
+  <ion-button color="secondary" expand="full" *ngIf="!editMode" (click)="enableEditMode()">Editar</ion-button>
+  <ion-button color="secondary" expand="full" *ngIf="editMode" (click)="saveProfileChanges()">Actualizar</ion-button>
+  <br>
+  <ion-button color="secondary" expand="full" (click)="logout()">Cerrar Sesión</ion-button>
+</ion-content>

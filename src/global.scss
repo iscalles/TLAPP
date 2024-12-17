@@ -24,7 +24,6 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
-
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -50,4 +49,7 @@
     left: 0;
     width: 100%;
     z-index: 100; /* Asegura que el menú esté por encima del contenido */
+}
+html, body {
+    scroll-behavior: auto !important;
 }

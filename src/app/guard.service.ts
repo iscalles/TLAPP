@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 
@@ -10,7 +10,14 @@ export class GuardService {
   private userRoleKey = "userRole"; 
   private userIdKey = "userId"; // Nueva clave para almacenar userId
   private loggedIn: boolean = false;
-  private apiUrl = 'http://localhost:3000/users'; 
+  public apiUrl = 'https://52980e9d-49e6-4de5-959e-64957ef06805-00-2e5umcjokfs6r.picard.replit.dev/users';
+
+  httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      })
+    };
 
   constructor(private http: HttpClient) {}
 
