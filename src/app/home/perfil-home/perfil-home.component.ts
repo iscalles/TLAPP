@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GuardService } from '../../guard.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,7 +11,14 @@ import { Router } from '@angular/router';
 export class PerfilHomeComponent  implements OnInit {
   user: any = {};
   editMode: boolean = false;
-  apiUrl = 'http://localhost:3000/users'; // URL de la API
+  apiUrl = 'https://52980e9d-49e6-4de5-959e-64957ef06805-00-2e5umcjokfs6r.picard.replit.dev/users'; // URL de la API
+  
+  httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      })
+    };
 
   constructor(private guardService: GuardService, private http: HttpClient, private router: Router) {}
 

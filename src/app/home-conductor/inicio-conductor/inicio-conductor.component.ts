@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { ViajeService } from '../../viaje.service';
+import { UserService } from '../../user.service';
 import { ToastController } from '@ionic/angular';
 import { interval, Subscription } from 'rxjs';
 
@@ -34,6 +35,7 @@ export class InicioConductorComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private viajeService: ViajeService,
+    private userService: UserService,
     private toastController: ToastController
   ) {}
 
@@ -143,24 +145,28 @@ export class InicioConductorComponent implements AfterViewInit, OnDestroy {
     if (this.nuevoViaje.direccionInicio && this.nuevoViaje.direccionFinal && this.nuevoViaje.distancia > 0 && this.nuevoViaje.precio > 0 && this.nuevoViaje.cupos >= 1 && this.nuevoViaje.cupos <= 4) {
       const nuevoViajeConId = { ...this.nuevoViaje, id: this.generateId(), conductorId: this.getConductorId() };
 
-      this.viajeService.createViaje(nuevoViajeConId).subscribe((viaje) => {
-        this.viajeService.setViajeCreado(viaje); // Almacenar el viaje creado en el servicio compartido
-        this.viajeCreado = viaje; // Almacenar el viaje creado localmente
-        this.toggleCreateForm(); // Oculta el formulario después de crear
-        this.nuevoViaje = { direccionInicio: '', direccionFinal: '', distancia: 0, precio: 0, cupos: 0, estado: 'pendiente' }; // Reinicia los valores del formulario
-        if (this.markerInicio) {
-          this.markerInicio.setMap(null); // Eliminar marcador de inicio
+      this.viajeService.createViaje(nuevoViajeConId).subscribe(
+        async (viaje) => {
+          this.presentToast('Viaje creado exitosamente');
+          this.viajeService.setViajeCreado(viaje); // Almacenar el viaje creado en el servicio compartido
+          this.viajeCreado = viaje; // Almacenar el viaje creado localmente
+          this.updateEstadoConductor('ocupado'); // Cambiar el estado del conductor a "ocupado"
+          this.toggleCreateForm(); // Oculta el formulario después de crear
+          this.nuevoViaje = { direccionInicio: '', direccionFinal: '', distancia: 0, precio: 0, cupos: 0, estado: 'pendiente' }; // Reinicia los valores del formulario
+          if (this.markerInicio) {
+            this.markerInicio.setMap(null); // Eliminar marcador de inicio
+          }
+          if (this.markerFinal) {
+            this.markerFinal.setMap(null); // Eliminar marcador de final
+          }
+        },
+        async (error) => {
+          this.presentToast('Error al crear el viaje');
+          console.error('Error al crear el viaje:', error);
         }
-        if (this.markerFinal) {
-          this.markerFinal.setMap(null); // Eliminar marcador de final
-        }
-        this.presentToast('El viaje se creó exitosamente.');
-        this.trazarRuta(viaje.direccionInicio, viaje.direccionFinal); // Trazar la ruta del viaje creado
-        this.startUpdatingViaje(); // Iniciar la actualización periódica del viaje
-      });
+      );
     } else {
-      console.error('Los cupos deben estar entre 1 y 4.');
-      this.presentToast('Los cupos disponibles deben ser entre 1 y 4.');
+      this.presentToast('Por favor, complete todos los campos correctamente');
     }
   }
 
@@ -168,7 +174,7 @@ export class InicioConductorComponent implements AfterViewInit, OnDestroy {
   startUpdatingViaje() {
     this.updateSubscription = interval(5000).subscribe(() => {
       if (this.viajeCreado) {
-        this.viajeService.getViajeById(this.viajeCreado.id).subscribe((viaje) => {
+        this.viajeService.getViajeById(this.viajeCreado.id).subscribe((viaje: any) => {
           this.viajeCreado = viaje;
         });
       }
@@ -182,6 +188,7 @@ export class InicioConductorComponent implements AfterViewInit, OnDestroy {
         this.presentToast('El viaje ha sido cancelado.');
         this.viajeService.clearViajeCreado(); // Limpiar el estado del viaje creado en el servicio compartido
         this.viajeCreado = null;
+        this.updateEstadoConductor('desocupado'); // Cambiar el estado del conductor a "desocupado"
         this.directionsRenderer.setDirections({ routes: [] }); // Limpiar la ruta del mapa
         if (this.updateSubscription) {
           this.updateSubscription.unsubscribe(); // Detener la actualización periódica
@@ -198,20 +205,45 @@ export class InicioConductorComponent implements AfterViewInit, OnDestroy {
         this.presentToast('El viaje ha sido finalizado.');
         this.viajeService.clearViajeCreado(); // Limpiar el estado del viaje creado en el servicio compartido
         this.viajeCreado = null;
+        this.updateEstadoConductor('desocupado'); // Cambiar el estado del conductor a "desocupado"
+        this.updateEstadoPasajeros(this.viajeCreado.pasajeros, 'desocupado'); // Cambiar el estado de los pasajeros a "desocupado"
         this.directionsRenderer.setDirections({ routes: [] }); // Limpiar la ruta del mapa
         if (this.updateSubscription) {
           this.updateSubscription.unsubscribe(); // Detener la actualización periódica
         }
-        this.viajeService.notifyViajeFinalizado(); // Notificar que el viaje ha sido finalizado
       });
     }
   }
 
+  // Actualizar el estado del conductor
+  updateEstadoConductor(estado: string) {
+    const conductorId = this.getConductorId();
+    this.userService.getUserById(conductorId).subscribe(user => {
+      user.estado = estado;
+      this.userService.updateUser(conductorId, user).subscribe(() => {
+        console.log(`Estado del conductor actualizado a ${estado}`);
+      });
+    });
+  }
+
+  // Actualizar el estado de los pasajeros
+  updateEstadoPasajeros(pasajeros: string[], estado: string) {
+    pasajeros.forEach(pasajeroId => {
+      this.userService.getUserById(pasajeroId).subscribe(user => {
+        user.estado = estado;
+        this.userService.updateUser(pasajeroId, user).subscribe(() => {
+          this.presentToast(`El viaje ha sido finalizado para el pasajero ${user.name}.`);
+          console.log(`Estado del pasajero ${user.name} actualizado a ${estado}`);
+        });
+      });
+    });
+  }
+
   // Mostrar un toast
-  async presentToast(message: string) {
+  async presentToast(message: string, duration: number = 2000) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 2000,
+      duration: duration,
       position: 'bottom'
     });
     toast.present();

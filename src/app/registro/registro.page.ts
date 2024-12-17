@@ -25,7 +25,6 @@ export class RegistroPage {
     private userService: UserService // Inyectar el servicio de usuarios
   ) {}
 
-
   mostrar() {
     if (this.data.name !== '' && this.data.email !== '') {
       this.presentAlert('Usuario', `Su nombre es ${this.data.name} y su email es ${this.data.email}`);
@@ -58,12 +57,12 @@ export class RegistroPage {
 
     // Lógica para registrar al usuario en la base de datos JSON
     this.userService.crearUsuario(this.data).subscribe(
-      response => {
+      (response: any) => {
         this.presentToast('Usuario registrado exitosamente');
         // Redirigir al usuario a la página de inicio de sesión
         this.router.navigate(['/login']);
       },
-      error => {
+      (error: any) => {
         this.presentToast('Error al registrar el usuario');
         console.error('Error al registrar el usuario:', error);
       }

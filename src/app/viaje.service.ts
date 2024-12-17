@@ -1,40 +1,43 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ViajeService {
-  private apiUrl = 'http://localhost:3000/viajes'; // Asegúrate de que esta URL sea correcta
+  apiUrl = 'https://52980e9d-49e6-4de5-959e-64957ef06805-00-2e5umcjokfs6r.picard.replit.dev/viajes'; // URL de la API para los viajes
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    })
+  };
+
   private viajeCreado: any = null; // Estado del viaje creado
   private viajeFinalizadoSubject = new Subject<void>(); // Sujeto para notificar cuando un viaje se finalice
 
   constructor(private http: HttpClient) {}
 
-  // CREATE: Crear un nuevo viaje
-  createViaje(viaje: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, viaje);
-  }
-
-  // READ: Obtener todos los viajes
+  // Método para obtener todos los viajes
   getViajes(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  // READ: Obtener un viaje por ID
-  getViajeById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  // Método para crear un nuevo viaje
+  createViaje(viaje: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, viaje, this.httpOptions);
   }
 
-  // UPDATE: Actualizar un viaje por ID
+  // Método para actualizar un viaje
   updateViaje(id: number, viaje: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, viaje);
+    return this.http.put(`${this.apiUrl}/${id}`, viaje, this.httpOptions);
   }
 
-  // DELETE: Eliminar un viaje por ID
+  // Método para eliminar un viaje
   deleteViaje(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`, this.httpOptions);
   }
 
   // Métodos para manejar el estado del viaje creado
@@ -48,6 +51,11 @@ export class ViajeService {
 
   clearViajeCreado() {
     this.viajeCreado = null;
+  }
+
+  // Método para obtener un viaje por ID
+  getViajeById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
   // Métodos para manejar la notificación de viaje finalizado

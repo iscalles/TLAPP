@@ -8,15 +8,6 @@ import { ToastController } from '@ionic/angular';
   styleUrls: ['./viajes-home.component.scss'],
 })
 export class ViajesHomeComponent implements OnInit {
-  viajes: any[] = [];
-  showCreateForm = false; // Para mostrar/ocultar el formulario
-  nuevoViaje = {
-    direccionInicio: '',
-    direccionFinal: '',
-    distancia: 0,
-    precio: 0,
-    estado: 'pendiente' // Estado predeterminado del viaje
-  };
   viajesUsuario: any[] = [];
 
   constructor(private viajeService: ViajeService, private toastController: ToastController) {}
@@ -28,7 +19,7 @@ export class ViajesHomeComponent implements OnInit {
   loadViajesUsuario() {
     const pasajeroId = this.getPasajeroId();
     this.viajeService.getViajes().subscribe((viajes: any[]) => {
-      this.viajesUsuario = viajes.filter(viaje => viaje.pasajeros && viaje.pasajeros.includes(pasajeroId) && viaje.estado === 'completado');
+      this.viajesUsuario = viajes.filter(viaje => viaje.pasajeros && viaje.pasajeros.includes(pasajeroId));
     });
   }
 

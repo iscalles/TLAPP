@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { ViajeService } from '../../viaje.service';
+import { UserService } from '../../user.service';
 import { ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
@@ -22,11 +23,12 @@ export class InicioHomeComponent implements AfterViewInit, OnDestroy {
   private checkInterval: any;
   private viajeFinalizadoSubscription!: Subscription;
 
-  constructor(private viajeService: ViajeService, private toastController: ToastController) {}
+  constructor(private viajeService: ViajeService, private userService: UserService, private toastController: ToastController) {}
 
   async ngAfterViewInit() {
     await this.loadMap();
     this.checkInterval = setInterval(() => {
+      this.checkViajeTomado();
       this.loadViajesPendientes();
     }, 1000); // Ejecutar cada 1 segundo
 
@@ -80,6 +82,7 @@ export class InicioHomeComponent implements AfterViewInit, OnDestroy {
         if (viajeTomado.estado === 'completado' && this.viajeTomado && this.viajeTomado.id === viajeTomado.id) {
           this.presentToast('El viaje ha sido finalizado.');
           this.viajeTomado = null;
+          this.updateEstadoPasajero('desocupado'); // Cambiar el estado del pasajero a "desocupado"
           this.directionsRenderer.setDirections({ routes: [] }); // Limpiar la ruta del mapa
         } else {
           this.viajeTomado = viajeTomado;
@@ -100,6 +103,7 @@ export class InicioHomeComponent implements AfterViewInit, OnDestroy {
       this.viajeService.updateViaje(viaje.id, viaje).subscribe(() => {
         this.presentToast('Has tomado el viaje exitosamente.');
         this.viajeTomado = viaje;
+        this.updateEstadoPasajero('ocupado'); // Cambiar el estado del pasajero a "ocupado"
         this.trazarRuta(viaje.direccionInicio, viaje.direccionFinal);
       });
     } else {
@@ -115,6 +119,7 @@ export class InicioHomeComponent implements AfterViewInit, OnDestroy {
       this.viajeService.updateViaje(this.viajeTomado.id, this.viajeTomado).subscribe(() => {
         this.presentToast('Has cancelado el viaje.');
         this.viajeTomado = null;
+        this.updateEstadoPasajero('desocupado'); // Cambiar el estado del pasajero a "desocupado"
         this.loadViajesPendientes(); // Volver al listado de viajes disponibles
         this.directionsRenderer.setDirections({ routes: [] }); // Limpiar la ruta del mapa
       });
@@ -143,11 +148,22 @@ export class InicioHomeComponent implements AfterViewInit, OnDestroy {
     return localStorage.getItem('userId') || '';
   }
 
+  // Actualizar el estado del pasajero
+  updateEstadoPasajero(estado: string) {
+    const pasajeroId = this.getPasajeroId();
+    this.userService.getUserById(pasajeroId).subscribe(user => {
+      user.estado = estado;
+      this.userService.updateUser(pasajeroId, user).subscribe(() => {
+        console.log(`Estado del pasajero actualizado a ${estado}`);
+      });
+    });
+  }
+
   // Mostrar un toast
-  async presentToast(message: string) {
+  async presentToast(message: string, duration: number = 2000) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 2000,
+      duration: duration,
       position: 'bottom'
     });
     toast.present();
